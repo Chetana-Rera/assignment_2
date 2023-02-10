@@ -1,0 +1,34 @@
+    # userId = input("enter your userId: ")
+    # questionId = input("enter question Id: ")
+    # sortKey = "question#" + userId + "#" + questionId
+
+    try:
+        response = __connected_table__.query(
+            KeyConditionExpression='#type = :typeval and sortKey = :sortKey',
+            FilterExpression='#status = :statusval and userId = :useridval ',
+            ExpressionAttributeNames={
+                '#type': 'type',
+
+                '#status': 'status',
+
+            },
+            ExpressionAttributeValues={
+                ':typeval': 'question',
+                ':sortKey': 'question#priyanka.juwar@arrkgroup.com#2',
+                ':useridval': 'priyanka.juwar@arrkgroup.com',
+                ':statusval': 1
+            },
+            ProjectionExpression="question"
+        )
+        print("Query response:", response)
+
+        print(response['Items'])
+        items = response.get('Items', [])
+        print(items)
+        if not items:
+            print(f"No questions found for user id: userId with sort key: sortKey")
+        else:
+            for item in items:
+                print(item['question']['S'])
+    except Exception:
+        print("SortKey is not available")
